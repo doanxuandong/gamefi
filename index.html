@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GameFi</title>
+    <link rel="stylesheet" href="css/typo/typo.css" />
+    <link rel="stylesheet" href="css/hc-canvas-luckwheel.css" />
+    <link rel="stylesheet" href="css/form.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+      .hc-luckywheel{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -250px;
+        margin-left: -265px;;
+      }
+    </style>
+  </head>
+  <body class="bg">
+    <!-- form -->
+    
+    <form class="form">
+      <div class="form-title"><span>Vòng quay miễn phí</span></div>
+      <div class="title-2"><span>GAMEFI</span></div>
+      <div class="input-container">
+        <input placeholder="Họ và Tên" type="text" class="input-name" />
+      </div>
+
+      <section class="bg-stars">
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+      </section>
+
+      <div class="input-container">
+        <input placeholder="Số điện thoại" type="tel" class="input-phone" />
+      </div>
+      <div class="input-container">
+        <select class="input-select">
+          <option value="">Chọn mặt hàng dưới đây</option>
+          <option value="lonsimilac2850gr">Lon Similac 2 850 gram</option>
+          <option value="lonsimilactotalprotection850gr">Lon Similac Total Protection 850 gram</option>
+          <option value="thungsimilac110ml">Thùng Similac 110ml</option>
+          <option value="thungsimilac180ml">Thùng Similac 180ml</option>
+          <option value="locsimilac180ml">Lốc Similac 180ml</option>
+          <option value="locsimilac110ml">Lốc Similac 110ml</option>
+          <option value="lonsimilacmom400gr">Lon Similac Mom 400 gram</option>
+          <option value="lonsimilacmom900gr">Lon Similac Mom 900 gram</option>
+          <option value="lonsimilac21.6kg">Lon Similac 2 1.6 Kg</option>
+        </select>
+      </div>
+      <div class="input-container">
+        <input placeholder="Nhập số lượng" type="number" class="input-quantity" min="1" max="2" />
+      </div>
+      <div class="input-container input-row">
+        <button type="button" class="form-icon-btn"><i class="fa-solid fa-location-dot"></i></button>
+        <button type="button" class="form-icon-btn"><i class="fa-solid fa-camera"></i></button>
+      </div>
+      <button class="submit" type="submit">
+        <span class="sign-text">NHẬN VÒNG QUAY</span>
+      </button>
+    </form>
+   
+    <!-- end form -->
+    <!-- Vòng quay-->
+    <div class="wrapper typo" id="wrapper">
+      <section id="luckywheel" class="hc-luckywheel">
+        <div class="hc-luckywheel-container">
+          <canvas class="hc-luckywheel-canvas" width="500px" height="500px"
+            >Vòng Xoay May Mắn</canvas
+          >
+        </div>
+        <a class="hc-luckywheel-btn" href="javascript:;">Xoay</a>
+      </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="js/hc-canvas-luckwheel.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+      var isPercentage = true;
+      var prizes = [
+              {
+                text: "Gấu",
+                img: "images/Gau.png",
+                number: 1, 
+                percentpage: 0.01 
+              },
+              {
+                text: "Chúc bạn may mắn lần sau",
+                img: "images/lose.png",
+                number: 1,
+                percentpage: 0.44
+              },
+              {
+                text: "Gấu",
+                img: "images/Gau.png",
+                number : 1,
+                percentpage: 0.01
+              },
+              {
+                text: "Chúc bạn may mắn lần sau",
+                img: "images/lose.png",
+                number: 1,
+                percentpage: 0.44
+              },
+              {
+                text: "Thêm lượt",
+                img: "images/Bonus.png",
+                percentpage: 0.1 
+              },
+            ];
+      document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+          hcLuckywheel.init({
+            id: "luckywheel",
+            config: function(callback) {
+              callback &&
+                callback(prizes);
+            },
+            mode : "both",
+            getPrize: function(callback) {
+              var rand = randomIndex(prizes);
+              var chances = rand;
+              callback && callback([rand, chances]);
+            },
+            gotBack: function(data) {
+              if(data == null){
+                Swal.fire({
+                  title: 'Chương trình kết thúc',
+                  imageUrl: 'images/lose.png',
+                  imageWidth: 80,
+                  imageHeight: 80,
+                  imageAlt: 'Đã hết phần thưởng',
+                  showConfirmButton: true
+                });
+              } else if (data == 'Chúc bạn may mắn lần sau'){
+                Swal.fire({
+                  title: 'Chúc bạn may mắn lần sau',
+                  imageUrl: 'images/lose.png',
+                  imageWidth: 80,
+                  imageHeight: 80,
+                  imageAlt: 'Chúc bạn may mắn lần sau',
+                  showConfirmButton: true
+                });
+              } else {
+                // Tìm phần thưởng tương ứng để lấy ảnh
+                var prize = prizes.find(function(p) { return p.text === data; });
+                Swal.fire({
+                  title: data,
+                  imageUrl: prize && prize.img ? prize.img : '',
+                  imageWidth: 80,
+                  imageHeight: 80,
+                  imageAlt: data,
+                  showConfirmButton: true
+                });
+              }
+            }
+          });
+        },
+        false
+      );
+      function randomIndex(prizes){
+        if(isPercentage){
+          var counter = 1;
+          for (let i = 0; i < prizes.length; i++) {
+            if(prizes[i].number == 0){
+              counter++
+            }
+          }
+          if(counter == prizes.length){
+            return null
+          }
+          let rand = Math.random();
+          let prizeIndex = null;
+          console.log(rand);
+          switch (true) {
+            case rand < prizes[4].percentpage:
+              prizeIndex = 4 ;
+              break;
+            case rand < prizes[4].percentpage + prizes[3].percentpage:
+              prizeIndex = 3;
+              break;
+            case rand < prizes[4].percentpage + prizes[3].percentpage + prizes[2].percentpage:
+              prizeIndex = 2;
+              break;
+            case rand < prizes[4].percentpage + prizes[3].percentpage + prizes[2].percentpage + prizes[1].percentpage:
+              prizeIndex = 1;
+              break;  
+            case rand < prizes[4].percentpage + prizes[3].percentpage + prizes[2].percentpage + prizes[1].percentpage  + prizes[0].percentpage:
+              prizeIndex = 0;
+              break;  
+          }
+          if(prizes[prizeIndex].number != 0){
+            prizes[prizeIndex].number = prizes[prizeIndex].number - 1
+            return prizeIndex
+          }else{
+            return randomIndex(prizes)
+          }
+        }else{
+          var counter = 0;
+          for (let i = 0; i < prizes.length; i++) {
+            if(prizes[i].number == 0){
+              counter++
+            }
+          }
+          if(counter == prizes.length){
+            return null
+          }
+          var rand = (Math.random() * (prizes.length)) >>> 0;
+          if(prizes[rand].number != 0){
+            prizes[rand].number = prizes[rand].number - 1
+            return rand
+          }else{
+            return randomIndex(prizes)
+          }
+        }
+      }
+    </script>
+    <!-- end Vòng quay-->
+  </body>
+</html>
